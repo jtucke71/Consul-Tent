@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+</head>
+<body>
+    <div class="header">
+                <a href="{{ url_for('home') }}">
+                <h1>Consul-Tent</h1>
+                <img src="/static/tent.png" alt="Tent" height="50" width="80">
+                </a>
+            </div>
+    <div class="navbar">
+        <div class="dropdown">
+            <button class="dropbtn">Navigate
+                <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="dropdown-content">
+                <a href="{{ url_for('home') }}"> Home</a>
+                <a href="{{ url_for('newpost') }}"> Make Post</a>
+                <a href="{{ url_for('account') }}"> Account</a>
+                <a href="{{ url_for('logout') }}"> Logout</a>
+            </div>
+        </div>
+        <p> {{ usrn }} </p>
+    </div>
+<body class="logback">
+    <center>
+        <div class="homebox">
+        <h2>{{ user }}'s Posts</h2>
+        <table border="1">
+        <form action="{{ url_for('sort2', user_id=u) }}" method="post">
+                <div class="formwrapper">
+                <tr>
+                                <div class="form-field">
+                                <td>
+                                    {{ formf.attribute.label }} <br/> {{ formf.attribute }}
+                                </div>
+                                {{ formf.submit(class="wordColor2") }}
+                                </td>
+                </tr>
+                </div>
+                </form>
+        </table>
+        <table border="1">
+            <tr>
+                <th>Title</th>
+                <th>Topic</th>
+                <th>Date</th>
+                <th>Uploader</th>
+                <th>Upvotes</th>
+                <th>Downvotes</th>
+            </tr>
+
+            {% for content in contents %}
+            <tr>
+		        <td><a href="{{ url_for('content', content_id=content.id) }}">{{ content.title }}</a></td>
+                <td>{{ content.topic }}</td>
+                <td>{{ content.date }}</td>
+                <td>{{ content.username }}</td>
+                <td>{{ content.upv }}</td>
+                <td>{{ content.dnv }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+            </div>
+        </div>
+    </div>
+    </center>
+</body>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <nav>
+            <div class="header">
+                <a href="{{ url_for('home') }}">
+                <h1>Consul-Tent</h1>
+                <img src="/static/tent.png" alt="Tent" height="50" width="80">
+                </a>
+            </div>
+            <div class="navbar">
+                <div class="dropdown">
+                    <button class="dropbtn">Navigate</button>
+                    <div class="dropdown-content">
+                        <a href="{{ url_for('home') }}"> Home</a>
+                        <a href="{{ url_for('newpost') }}"> Make Post</a>
+                        <a href="{{ url_for('account') }}"> Account</a>
+                        <a href="{{ url_for('logout') }}"> Logout</a>
+                    </div>
+                </div>
+                <p> {{ usrn }} </p>
+            </div>
+        </nav>
+
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="Consul-Tent">
+        <title>Consul-Tent App - View Posts</title>
+        <!-- styles -->
+        <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css" crossorigin="anonymous">
+
+    </head>
+    <body class="logback">
+        <center>
+            <div class="homebox">
+                <h1>{{ content.title }}</h1>
+                <table border="1">
+                    <tr>
+                        <th>Topic</th>
+                        <th>Date</th>
+                        <th>User</th>
+                    </tr>
+                    <tr>
+                        <td>{{ content.topic }}</td>
+                        <td>{{ content.date }}</td>
+                        <td><a href="{{ url_for('user', user_id=content.user_id) }}">{{ content.username }}</a></td>
+                    </tr>
+                </table>
+                <h3><textarea name="content"  rows="13" cols="80" readonly> {{ content.text }} </textarea></h3>
+                <table border="1">
+                <tr>
+                    <td>
+                        <form action="{{ url_for('favorite', content_id=content.id) }}" method="post">
+                            <div class="wordColor2">
+                                <button class="favButton">
+                                        <i class="fas fa-thumbtack"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </td>
+                    <td>
+                        <center>
+                            <form action="{{ url_for('vote', content_id=content.id) }}" method="post">
+                                <div class="wordColor2">
+                                    <label>
+                                        <input type="radio" name="vote" value="upvote" onclick="javascript: submit()">
+                                        <i class="fas fa-fire"></i>{{ votes.upvotes }}
+                                    </label>
+                                    <br/>
+                                    <label>
+                                        <input type="radio" name="vote" value="downvote" onclick="javascript: submit()">
+                                        <i class="fas fa-fire-extinguisher"></i>{{ votes.downvotes }}
+                                    </label>
+                                </div>
+                            </form>
+                        </center>
+                    </td>
+                    {% if usrn == esrn %}
+                    <td>
+                        <form action="{{ url_for('delete_content', content_id=content.id) }}" method="post">
+                                <input type="submit" class="wordColor2" value="Delete">
+                        </form>
+                    </td>
+                    <td>
+                        <button>
+                            <a href="{{ url_for('update_content', content_id=content.id) }}">Edit</a>
+                        </button>
+                    </td>
+                    {% endif %}
+                </tr>
+                </table>
+                <h3>Replies</h3>
+                <table border="1">
+                {% if content.comments %}
+                    {% if content.comments|length > 0 %}
+                        {% for comment in content.comments %}
+                            <tr>
+                                <td><textarea rows="2" cols="72">{{ comment.content }}</textarea></td>
+                                <td><a href="{{ url_for('user', user_id=comment.user_id) }}">{{ comment.username }}</a></td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                {% endif %}
+                </table><br>
+                <form action="{{ url_for('reply', content_id=content.id) }}" method="post">
+                    <div class="formwrapper">
+                            <div class="form-field">
+                                {{ form.comment.label }} <br/> {{ form.comment(rows='2',cols='80') }}
+                            </div>
+                        {{ form.submit(class="wordColor2") }}
+                    </div>
+                </form>
+            </div>
+        </center>
+    </body>
+</html>
